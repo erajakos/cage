@@ -55,9 +55,9 @@ public class GridManager : MonoBehaviour
 
     Tile GetTile(float sample)
     {
-        if (sample < 0.3) {
+        if (sample < 0.3f) {
             return tileManager.GetTile("snowIce");
-        } else if (sample < 0.5)
+        } else if (sample < 0.5f)
             return tileManager.GetTile("ground");
         else {
             return tileManager.GetTile("grassGround");
