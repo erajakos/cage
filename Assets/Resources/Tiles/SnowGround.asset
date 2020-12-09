@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: GrassGround
+  m_Name: SnowGround
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 21300000, guid: e6c9b835b1ee546d3896988a4febe619, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 30dd919ac821c4288a1193bc9fb52021, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1

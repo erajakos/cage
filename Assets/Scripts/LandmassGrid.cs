@@ -1,13 +1,13 @@
 ﻿using System;
 using UnityEngine;
 
-public class Grid
+public class LandmassGrid
 {
     private int cols;
     private int rows;
     private float perlinNoiseMultiplier;
 
-    public Grid(int cols, int rows, float perlinNoiseMultiplier = 4f)
+    public LandmassGrid(int cols, int rows, float perlinNoiseMultiplier = 4f)
     {
         if (cols < 1)
         {

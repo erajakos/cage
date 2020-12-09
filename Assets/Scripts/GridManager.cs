@@ -5,8 +5,9 @@ public class GridManager : MonoBehaviour
 {
     public TileManager tileManager;
 
-    private Tilemap tilemap;
-    
+    public Tilemap tilemapGround;
+    public Tilemap tilemapTrees;
+
     [SerializeField]
     private int rows = 50;
 
@@ -16,26 +17,23 @@ public class GridManager : MonoBehaviour
     private int numGenerated = 0;
     private const float tileHeight = 0.5795f;
 
-    private Grid grid;
-
-    private void Awake()
-    {
-        tilemap = FindObjectOfType<Tilemap>();
-        grid = new Grid(cols, rows);
-    }
+    private LandmassGrid landmassGrid;
 
     void Start()
     {
+        landmassGrid = new LandmassGrid(cols, rows);
         GenerateGrid();
-        InvokeRepeating("GenerateGrid", 0.15f, 0.15f);
+        //InvokeRepeating("GenerateGrid", 0.15f, 0.15f);
     }
 
     void GenerateGrid()
     {
         numGenerated++;
-        float[,] gridData = grid.GenerateGrid(numGenerated);
+        float[,] gridData = landmassGrid.GenerateGrid(numGenerated);
 
-        tilemap.ClearAllTiles();
+        tilemapGround.ClearAllTiles();
+        tilemapTrees.ClearAllTiles();
+
 
         for (int row = 0; row < gridData.GetLength(0); row++)
         {
@@ -45,22 +43,29 @@ public class GridManager : MonoBehaviour
                 if (sample < 0.6)
                 {
                     Tile tile = GetTile(sample);
-                    tilemap.SetTile(new Vector3Int(col, row, 0), tile);
+                    tilemapGround.SetTile(new Vector3Int(col, row, 0), tile);
+
+                    if (sample >= 0.3f && sample < 0.5f && Random.Range(0, 100) >= 90)
+                    {
+                        tilemapTrees.SetTile(new Vector3Int(col, row, 0), tileManager.GetTile("tree"));
+                    }
                 }
             }
         }
 
-        tilemap.transform.position = new Vector2(0, -tilemap.size.y / 2 * tileHeight + tileHeight / 2);
+        tilemapGround.transform.position = new Vector2(0, -tilemapGround.size.y / 2 * tileHeight + tileHeight / 2);
+        tilemapTrees.transform.position = new Vector2(0, -tilemapGround.size.y / 2 * tileHeight + tileHeight / 2);
     }
 
     Tile GetTile(float sample)
     {
         if (sample < 0.3f) {
-            return tileManager.GetTile("snowIce");
+            return tileManager.GetTile("snowGrassNoShadow");
+            //return tileManager.GetTile("snowGround");
         } else if (sample < 0.5f)
-            return tileManager.GetTile("ground");
-        else {
             return tileManager.GetTile("grassGround");
+        else {
+            return tileManager.GetTile("ground");
         }
     }
 }
