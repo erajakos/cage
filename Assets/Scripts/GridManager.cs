@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Tilemaps;
+using Landmass;
 
 public class GridManager : MonoBehaviour
 {
@@ -14,7 +16,6 @@ public class GridManager : MonoBehaviour
     [SerializeField]
     private int cols = 50;
 
-    private int numGenerated = 0;
     private const float tileHeight = 0.5795f;
 
     private LandmassGrid landmassGrid;
@@ -28,8 +29,7 @@ public class GridManager : MonoBehaviour
 
     void GenerateGrid()
     {
-        numGenerated++;
-        float[,] gridData = landmassGrid.GenerateGrid(numGenerated);
+        Land[,] gridData = landmassGrid.GenerateGrid(UnityEngine.Random.Range(0,1000000));
 
         tilemapGround.ClearAllTiles();
         tilemapTrees.ClearAllTiles();
@@ -39,16 +39,18 @@ public class GridManager : MonoBehaviour
         {
             for (int col = 0; col < gridData.GetLength(1); col++)
             {
-                float sample = gridData[col, row];
-                if (sample < 0.6)
+                Land land = gridData[col, row];
+                if (land.type != "water")
                 {
-                    Tile tile = GetTile(sample);
+                    Tile tile = GetTile(land.type);
                     tilemapGround.SetTile(new Vector3Int(col, row, 0), tile);
 
-                    if (sample >= 0.3f && sample < 0.5f && Random.Range(0, 100) >= 90)
+                    /*
+                    if (land.sample >= 0.3f && land.sample < 0.5f && UnityEngine.Random.Range(0, 100) >= 95)
                     {
                         tilemapTrees.SetTile(new Vector3Int(col, row, 0), tileManager.GetTile("tree"));
                     }
+                    */
                 }
             }
         }
@@ -57,14 +59,19 @@ public class GridManager : MonoBehaviour
         tilemapTrees.transform.position = new Vector2(0, -tilemapGround.size.y / 2 * tileHeight + tileHeight / 2);
     }
 
-    Tile GetTile(float sample)
+    Tile GetTile(string type)
     {
-        if (sample < 0.3f) {
-            return tileManager.GetTile("snowGrassNoShadow");
+        if (type == "snow-grass")
+        {
+            return tileManager.GetTile("snowGrass");
             //return tileManager.GetTile("snowGround");
-        } else if (sample < 0.5f)
+        }
+        else if (type == "grass-ground")
+        {
             return tileManager.GetTile("grassGround");
-        else {
+        }
+        else
+        {
             return tileManager.GetTile("ground");
         }
     }
