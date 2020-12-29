@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Tilemaps;
 using Landmass;
 
@@ -33,7 +32,6 @@ public class GridManager : MonoBehaviour
 
         tilemapGround.ClearAllTiles();
         tilemapTrees.ClearAllTiles();
-
 
         for (int row = 0; row < gridData.GetLength(0); row++)
         {
