@@ -2,21 +2,19 @@
 using UnityEngine;
 using Events;
 
-using Characters;
-
 public class Player
 {
     public string name;
-    public List<Character> characters;
+    public List<GameObject> characters;
     private EventManager em;
     private int characterTurn = 0;
-    private Character currentCharacter;
+    private GameObject currentCharacter;
     private bool hasTurn = false;
 
     public Player(string name)
     {
         this.name = name;
-        characters = new List<Character>();
+        characters = new List<GameObject>();
         AddCharacters();
 
         em = EventManager.GetInstance();
@@ -27,13 +25,23 @@ public class Player
     private void AddCharacters()
     {
         string face = (name == "Erkki") ? "characterA" : "characterB";
-        Character character1 = new Character(face);
-        Character character2 = new Character(face);
-        Character character3 = new Character(face);
+
+        GameObject character1 = AddCharacter(face);
+        GameObject character2 = AddCharacter(face);
+        GameObject character3 = AddCharacter(face);
 
         characters.Add(character1);
         characters.Add(character2);
         characters.Add(character3);
+    }
+
+    private GameObject AddCharacter(string sprite)
+    {
+        GameObject character = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/Character"));
+        Sprite characterSprite = Resources.Load<Sprite>("Sprites/Characters/" + sprite);
+        character.GetComponent<SpriteRenderer>().sprite = characterSprite;
+
+        return character;
     }
 
     private void OnPlayerTurnStart(PlayerTurnStartEvent e)
@@ -71,7 +79,7 @@ public class Player
         if (hasTurn)
         {
             Debug.Log("Character turn: " + characterTurn + " " + name);
-            Character character = characters[characterTurn];
+            GameObject character = characters[characterTurn];
             currentCharacter = character;
             em.Dispatch(new CharacterTurnStartEvent
             {

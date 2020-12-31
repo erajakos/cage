@@ -1,4 +1,4 @@
-﻿using Characters;
+﻿using UnityEngine;
 
 public class StartGameEvent { };
 public class NextTurnEvent
@@ -11,9 +11,9 @@ public class PlayerTurnStartEvent {
 public class PlayerTurnEndEvent { };
 public class CharacterTurnStartEvent
 {
-    public Character character;
+    public GameObject character;
 };
 public class CharacterTurnEndEvent
 {
-    public Character character;
+    public GameObject character;
 };

@@ -1,11 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.Tilemaps;
 using Events;
-using Characters;
 
 public class CharacterMovement : MonoBehaviour
 {
-    public Character character;
     private Tilemap tilemap;
     private Grid grid;
     private Camera cam;
@@ -22,6 +20,8 @@ public class CharacterMovement : MonoBehaviour
         tilemap = rm.groundTileMap;
         cam = Camera.main;
         em = EventManager.GetInstance();
+        em.AddListener<CharacterTurnStartEvent>(OnCharacterTurnStart);
+        enabled = false;
     }
 
     void Start()
@@ -62,9 +62,21 @@ public class CharacterMovement : MonoBehaviour
                 moving = false;
                 em.Dispatch(new CharacterTurnEndEvent
                 {
-                    character = character
+                    character = gameObject
                 });
             }
+        }
+    }
+
+    private void OnCharacterTurnStart(CharacterTurnStartEvent e)
+    {
+        if (ReferenceEquals(e.character, gameObject))
+        {
+            enabled = true;
+        }
+        else
+        {
+            enabled = false;
         }
     }
 }
