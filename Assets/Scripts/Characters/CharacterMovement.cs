@@ -38,9 +38,11 @@ public class CharacterMovement : MonoBehaviour
             // get the collision point of the ray with the z = 0 plane
             Vector3 worldPoint = ray.GetPoint(-ray.origin.z / ray.direction.z);
             Vector3Int gridPos = tilemap.WorldToCell(worldPoint);
+
             if (tilemap.HasTile(gridPos))
             {
                 Vector3Int cellCoords = grid.WorldToCell(worldPoint);
+
                 Vector3 cellCenter = grid.GetCellCenterWorld(cellCoords);
                 targetPosition = new Vector2(cellCenter.x, cellCenter.y + transform.lossyScale.y / 4f);
                 moving = true;
@@ -73,6 +75,13 @@ public class CharacterMovement : MonoBehaviour
         if (ReferenceEquals(e.character, gameObject))
         {
             enabled = true;
+            Vector3Int gridPos = tilemap.WorldToCell(transform.position);
+
+            em.Dispatch(new CharacterStartPosEvent
+            {
+                character = gameObject,
+                gridPos = gridPos
+            });
         }
         else
         {

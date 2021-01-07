@@ -7,6 +7,7 @@ public class SelectTile : MonoBehaviour
     public Grid grid;
 
     private Camera cam;
+    private float tileOffsetY = 0.02f;
 
     private void Start()
     {
@@ -21,12 +22,11 @@ public class SelectTile : MonoBehaviour
         Vector3 worldPoint = ray.GetPoint(-ray.origin.z / ray.direction.z);
         Vector3Int gridPos = groundTilemap.WorldToCell(worldPoint);
 
-        
         if (groundTilemap.HasTile(gridPos))
         {
             Vector3Int cellCoords = grid.WorldToCell(worldPoint);
             Vector3 cellCenter = grid.GetCellCenterWorld(cellCoords);
-            transform.position = new Vector2(cellCenter.x, cellCenter.y + 0.02f);
+            transform.position = new Vector2(cellCenter.x, cellCenter.y + tileOffsetY);
         }
     }
 }

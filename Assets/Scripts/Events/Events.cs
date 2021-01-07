@@ -17,3 +17,8 @@ public class CharacterTurnEndEvent
 {
     public GameObject character;
 };
+public class CharacterStartPosEvent
+{
+    public GameObject character;
+    public Vector3Int gridPos;
+};
