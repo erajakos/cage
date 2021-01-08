@@ -12,12 +12,14 @@ public class CharacterMovement : MonoBehaviour
     private Vector2 targetPosition;
     private ReferenceManager rm;
     private EventManager em;
+    private MovementManager movementManager;
 
     void Awake()
     {
         rm = ReferenceManager.Instance;
         grid = rm.grid;
         tilemap = rm.groundTileMap;
+        movementManager = rm.movementManager;
         cam = Camera.main;
         em = EventManager.GetInstance();
         em.AddListener<CharacterTurnStartEvent>(OnCharacterTurnStart);
@@ -39,7 +41,7 @@ public class CharacterMovement : MonoBehaviour
             Vector3 worldPoint = ray.GetPoint(-ray.origin.z / ray.direction.z);
             Vector3Int gridPos = tilemap.WorldToCell(worldPoint);
 
-            if (tilemap.HasTile(gridPos))
+            if (tilemap.HasTile(gridPos) && movementManager.IsValidMove(gridPos))
             {
                 Vector3Int cellCoords = grid.WorldToCell(worldPoint);
 

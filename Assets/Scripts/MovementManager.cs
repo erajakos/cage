@@ -4,17 +4,32 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using Events;
 
-public class MoveOptions : MonoBehaviour
+public class MovementManager : MonoBehaviour
 {
     public Tilemap tilemapGround;
     public Grid grid;
-    public List<GameObject> highlightedTiles;
+    private List<GameObject> highlightedTiles;
     private float highlightOffsetY = 0.293f;
+    private List<Vector3Int> movementOptions;
 
     private void Awake()
     {
         EventManager em = EventManager.GetInstance();
         em.AddListener<CharacterStartPosEvent>(OnCharacterStartPosEvent);
+        highlightedTiles = new List<GameObject>();
+    }
+
+    public bool IsValidMove(Vector3Int move)
+    {
+        foreach(Vector3Int mo in movementOptions)
+        {
+            if (mo == move)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void OnCharacterStartPosEvent(CharacterStartPosEvent e)
@@ -35,7 +50,7 @@ public class MoveOptions : MonoBehaviour
 
     private void AddHighlightedTiles(Vector3Int startPos, int maxMoves)
     {
-        List<Vector3Int> movementOptions = new List<Vector3Int>();
+        movementOptions = new List<Vector3Int>();
         for (int i = 0; i < maxMoves; i++)
         {
             for(int x = -1; x <= 1; x++) {
