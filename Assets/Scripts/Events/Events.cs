@@ -21,4 +21,5 @@ public class CharacterStartPosEvent
 {
     public GameObject character;
     public Vector3Int gridPos;
+    public Vector3 position;
 };

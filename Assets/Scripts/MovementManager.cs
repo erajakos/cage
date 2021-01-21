@@ -35,7 +35,7 @@ public class MovementManager : MonoBehaviour
     private void OnCharacterStartPosEvent(CharacterStartPosEvent e)
     {
         RemoveHighlightedTiles();
-        AddHighlightedTiles(e.gridPos, 1);
+        AddHighlightedTiles(e.gridPos, 3);
     }
 
     private void RemoveHighlightedTiles()
@@ -51,17 +51,14 @@ public class MovementManager : MonoBehaviour
     private void AddHighlightedTiles(Vector3Int startPos, int maxMoves)
     {
         movementOptions = new List<Vector3Int>();
-        for (int i = 0; i < maxMoves; i++)
-        {
-            for(int x = -1; x <= 1; x++) {
-                for(int y = -1; y <= 1; y++)
+        for(int x = -maxMoves; x <= maxMoves; x++) {
+            for(int y = -maxMoves; y <= maxMoves; y++)
+            {
+                if (!(x == 0 && y == 0))
                 {
-                    if (!(x == 0 && y == 0))
-                    {
-                        Vector3Int gridPos = new Vector3Int(startPos.x + x, startPos.y - y, 0);
-                        if (tilemapGround.HasTile(gridPos)) {
-                            movementOptions.Add(gridPos);
-                        }
+                    Vector3Int gridPos = new Vector3Int(startPos.x + x, startPos.y - y, 0);
+                    if (tilemapGround.HasTile(gridPos)) {
+                        movementOptions.Add(gridPos);
                     }
                 }
             }

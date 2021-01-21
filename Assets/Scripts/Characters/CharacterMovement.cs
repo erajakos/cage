@@ -82,7 +82,8 @@ public class CharacterMovement : MonoBehaviour
             em.Dispatch(new CharacterStartPosEvent
             {
                 character = gameObject,
-                gridPos = gridPos
+                gridPos = gridPos,
+                position = transform.position,
             });
         }
         else
