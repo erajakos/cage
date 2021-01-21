@@ -10,23 +10,28 @@ public class GridManager : MonoBehaviour
     public Tilemap tilemapTrees;
 
     [SerializeField]
-    private int rows = 50;
+    private int rows = 20;
 
     [SerializeField]
-    private int cols = 50;
+    private int cols = 20;
 
     private const float tileHeight = 0.5795f;
 
     private LandmassGrid landmassGrid;
 
-    void Start()
+    public Vector2Int GetCenter()
+    {
+        return new Vector2Int((int)rows / 2, (int)cols / 2);
+    }
+
+    private void Start()
     {
         landmassGrid = new LandmassGrid(cols, rows);
         GenerateGrid();
         //InvokeRepeating("GenerateGrid", 0.15f, 0.15f);
     }
 
-    void GenerateGrid()
+    private void GenerateGrid()
     {
         Land[,] gridData = landmassGrid.GenerateGrid(UnityEngine.Random.Range(0,1000000));
 
@@ -55,7 +60,7 @@ public class GridManager : MonoBehaviour
         tilemapTrees.transform.position = new Vector2(0, -tilemapGround.size.y / 2 * tileHeight + tileHeight / 2);
     }
 
-    Tile GetTile(string type)
+    private Tile GetTile(string type)
     {
         if (type == "snow-grass")
         {

@@ -13,6 +13,7 @@ public class CharacterMovement : MonoBehaviour
     private ReferenceManager rm;
     private EventManager em;
     private MovementManager movementManager;
+    private GridManager gridManager;
 
     void Awake()
     {
@@ -20,8 +21,11 @@ public class CharacterMovement : MonoBehaviour
         grid = rm.grid;
         tilemap = rm.groundTileMap;
         movementManager = rm.movementManager;
+        gridManager = rm.gridManager;
+
         cam = Camera.main;
         em = EventManager.GetInstance();
+        em.AddListener<CharacterAddedEvent>(OnCharacterAdded);
         em.AddListener<CharacterTurnStartEvent>(OnCharacterTurnStart);
         enabled = false;
     }
@@ -33,7 +37,7 @@ public class CharacterMovement : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !moving)
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
@@ -48,6 +52,12 @@ public class CharacterMovement : MonoBehaviour
                 Vector3 cellCenter = grid.GetCellCenterWorld(cellCoords);
                 targetPosition = new Vector2(cellCenter.x, cellCenter.y + transform.lossyScale.y / 4f);
                 moving = true;
+
+                em.Dispatch(new CharacterMovedEvent
+                {
+                    character = gameObject,
+                    gridPos = gridPos
+                });
             }
         }
     }
@@ -69,6 +79,15 @@ public class CharacterMovement : MonoBehaviour
                     character = gameObject
                 });
             }
+        }
+    }
+
+    private void OnCharacterAdded(CharacterAddedEvent e)
+    {
+        if (ReferenceEquals(e.character, gameObject))
+        {
+            Vector2Int gridCenter = gridManager.GetCenter();
+            Debug.Log(gridCenter);
         }
     }
 

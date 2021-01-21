@@ -13,11 +13,12 @@ public class Player
 
     public Player(string name)
     {
+        em = EventManager.GetInstance();
+
         this.name = name;
         characters = new List<GameObject>();
         AddCharacters();
 
-        em = EventManager.GetInstance();
         em.AddListener<PlayerTurnStartEvent>(OnPlayerTurnStart);
         em.AddListener<CharacterTurnEndEvent>(OnCharacterTurnEnd);
     }
@@ -40,6 +41,11 @@ public class Player
         GameObject character = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/Character"));
         Sprite characterSprite = Resources.Load<Sprite>("Sprites/Characters/" + sprite);
         character.GetComponent<SpriteRenderer>().sprite = characterSprite;
+
+        em.Dispatch(new CharacterAddedEvent
+        {
+            character = character
+        });
 
         return character;
     }

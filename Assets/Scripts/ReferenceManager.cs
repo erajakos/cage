@@ -6,6 +6,8 @@ public class ReferenceManager : MonoBehaviour
     public Tilemap groundTileMap;
     public Grid grid;
     public MovementManager movementManager;
+    public GridManager gridManager;
+    public PositionManager positionManager;
 
     private static ReferenceManager instance;
     public static ReferenceManager Instance { get { return instance; } }

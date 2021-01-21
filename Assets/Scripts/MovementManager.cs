@@ -11,9 +11,14 @@ public class MovementManager : MonoBehaviour
     private List<GameObject> highlightedTiles;
     private float highlightOffsetY = 0.293f;
     private List<Vector3Int> movementOptions;
+    private ReferenceManager rm;
+    private PositionManager positionManager;
 
     private void Awake()
     {
+        rm = ReferenceManager.Instance;
+        positionManager = rm.positionManager;
+
         EventManager em = EventManager.GetInstance();
         em.AddListener<CharacterStartPosEvent>(OnCharacterStartPosEvent);
         highlightedTiles = new List<GameObject>();
@@ -23,7 +28,7 @@ public class MovementManager : MonoBehaviour
     {
         foreach(Vector3Int mo in movementOptions)
         {
-            if (mo == move)
+            if (mo == move && !positionManager.hasCharacter(move))
             {
                 return true;
             }
@@ -57,7 +62,7 @@ public class MovementManager : MonoBehaviour
                 if (!(x == 0 && y == 0))
                 {
                     Vector3Int gridPos = new Vector3Int(startPos.x + x, startPos.y - y, 0);
-                    if (tilemapGround.HasTile(gridPos)) {
+                    if (tilemapGround.HasTile(gridPos) && !positionManager.hasCharacter(gridPos)) {
                         movementOptions.Add(gridPos);
                     }
                 }
