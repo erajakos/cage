@@ -43,12 +43,10 @@ public class GridManager : MonoBehaviour
                     Tile tile = GetTile(land.type);
                     tilemapGround.SetTile(new Vector3Int(col, row, 0), tile);
 
-                    /*
                     if (land.sample >= 0.3f && land.sample < 0.5f && UnityEngine.Random.Range(0, 100) >= 95)
                     {
                         tilemapTrees.SetTile(new Vector3Int(col, row, 0), tileManager.GetTile("tree"));
                     }
-                    */
                 }
             }
         }
