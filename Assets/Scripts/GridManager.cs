@@ -19,9 +19,14 @@ public class GridManager : MonoBehaviour
 
     private LandmassGrid landmassGrid;
 
-    public Vector2Int GetCenter()
+    public int Rows
     {
-        return new Vector2Int((int)rows / 2, (int)cols / 2);
+        get { return rows; }
+    }
+
+    public int Cols
+    {
+        get { return cols; }
     }
 
     private void Start()

@@ -110,11 +110,11 @@ namespace Events
 
             if (eventData != null)
             {
-                //Debug.Log($"{eventData.GetType().ToString()}: {eventData.ToString()}");
+                Debug.Log($"{eventData.GetType().ToString()}: {eventData.ToString()}");
             }
             else
             {
-                //Debug.Log($"{typeof(T).Name}");
+                Debug.Log($"{typeof(T).Name}");
             }
 
 

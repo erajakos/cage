@@ -14,6 +14,7 @@ public class CharacterMovement : MonoBehaviour
     private EventManager em;
     private MovementManager movementManager;
     private GridManager gridManager;
+    private PositionManager positionManager;
 
     void Awake()
     {
@@ -21,13 +22,13 @@ public class CharacterMovement : MonoBehaviour
         grid = rm.grid;
         tilemap = rm.groundTileMap;
         movementManager = rm.movementManager;
+        positionManager = rm.positionManager;
         gridManager = rm.gridManager;
 
         cam = Camera.main;
         em = EventManager.GetInstance();
         em.AddListener<CharacterAddedEvent>(OnCharacterAdded);
         em.AddListener<CharacterTurnStartEvent>(OnCharacterTurnStart);
-        enabled = false;
     }
 
     void Start()
@@ -48,15 +49,20 @@ public class CharacterMovement : MonoBehaviour
             if (tilemap.HasTile(gridPos) && movementManager.IsValidMove(gridPos))
             {
                 Vector3Int cellCoords = grid.WorldToCell(worldPoint);
-
+                Debug.Log(cellCoords);
+                targetPosition = TargetCellToWorld(cellCoords);
+                
                 Vector3 cellCenter = grid.GetCellCenterWorld(cellCoords);
-                targetPosition = new Vector2(cellCenter.x, cellCenter.y + transform.lossyScale.y / 4f);
+                targetPosition = new Vector2(
+                    cellCenter.x,
+                    cellCenter.y + transform.lossyScale.y / 4f
+                );
                 moving = true;
 
                 em.Dispatch(new CharacterMovedEvent
                 {
                     character = gameObject,
-                    gridPos = gridPos
+                    gridPos = gridPos,
                 });
             }
         }
@@ -68,9 +74,14 @@ public class CharacterMovement : MonoBehaviour
         {
             // Move our position a step closer to the target.
             float step = speed * Time.deltaTime; // calculate distance to move
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, step);
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                targetPosition,
+                step
+            );
 
-            // Check if the position of the cube and sphere are approximately equal.
+            // Check if the position of the cube and sphere are approximately
+            // equal
             if (Vector3.Distance(transform.position, targetPosition) < 0.0001f)
             {
                 moving = false;
@@ -86,8 +97,18 @@ public class CharacterMovement : MonoBehaviour
     {
         if (ReferenceEquals(e.character, gameObject))
         {
-            Vector2Int gridCenter = gridManager.GetCenter();
-            Debug.Log(gridCenter);
+            Vector3Int gridCenter = new Vector3Int(0, 0, 0);
+            Vector3Int closestTile = positionManager.GetClosestFreeTile(gridCenter);
+
+            transform.position = TargetCellToWorld(closestTile);
+
+            em.Dispatch(new CharacterMovedEvent
+            {
+                character = gameObject,
+                gridPos = closestTile
+            });
+
+            enabled = false;
         }
     }
 
@@ -102,12 +123,21 @@ public class CharacterMovement : MonoBehaviour
             {
                 character = gameObject,
                 gridPos = gridPos,
-                position = transform.position,
+                position = transform.position
             });
         }
         else
         {
             enabled = false;
         }
+    }
+
+    private Vector2 TargetCellToWorld(Vector3Int cellCoords)
+    {
+        Vector3 cellCenter = grid.GetCellCenterWorld(cellCoords);
+        return new Vector2(
+            cellCenter.x,
+            cellCenter.y + transform.lossyScale.y / 4f
+        );
     }
 }

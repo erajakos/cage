@@ -11,14 +11,10 @@ public class MovementManager : MonoBehaviour
     private List<GameObject> highlightedTiles;
     private float highlightOffsetY = 0.293f;
     private List<Vector3Int> movementOptions;
-    private ReferenceManager rm;
-    private PositionManager positionManager;
+    public PositionManager positionManager;
 
     private void Awake()
     {
-        rm = ReferenceManager.Instance;
-        positionManager = rm.positionManager;
-
         EventManager em = EventManager.GetInstance();
         em.AddListener<CharacterStartPosEvent>(OnCharacterStartPosEvent);
         highlightedTiles = new List<GameObject>();
