@@ -54,7 +54,7 @@ public class Player
                 break;
             case PlayerType.Enemy:
             default:
-                prefab = "Character";
+                prefab = "CowBlW";
                 break;
         }
 

@@ -7,7 +7,7 @@ public class SelectTile : MonoBehaviour
     public Grid grid;
 
     private Camera cam;
-    private float tileOffsetY = -0.12f;
+    private float tileOffsetY = -0.04f;
 
     private void Start()
     {
@@ -21,6 +21,7 @@ public class SelectTile : MonoBehaviour
         // get the collision point of the ray with the z = 0 plane
         Vector3 worldPoint = ray.GetPoint(-ray.origin.z / ray.direction.z);
         Vector3Int gridPos = groundTilemap.WorldToCell(worldPoint);
+        //Debug.Log(gridPos);
 
         if (groundTilemap.HasTile(gridPos))
         {

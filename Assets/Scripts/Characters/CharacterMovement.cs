@@ -15,7 +15,6 @@ public class CharacterMovement : MonoBehaviour
     private EventManager em;
     private MovementManager movementManager;
     private GridManager gridManager;
-    private PositionManager positionManager;
 
     void Awake()
     {
@@ -23,7 +22,6 @@ public class CharacterMovement : MonoBehaviour
         grid = rm.grid;
         tilemap = rm.groundTileMap;
         movementManager = rm.movementManager;
-        positionManager = rm.positionManager;
         gridManager = rm.gridManager;
 
         cam = Camera.main;
@@ -98,10 +96,18 @@ public class CharacterMovement : MonoBehaviour
     {
         if (ReferenceEquals(e.character, gameObject))
         {
-            Vector3Int gridCenter = new Vector3Int(0, 0, 0);
-            Vector3Int closestTile = positionManager.GetClosestFreeTile(gridCenter);
+            Vector3Int tile;
+            if (gameObject.tag == "Human" || gameObject.tag == "Lemming")
+            {
+                Vector3Int gridCenter = new Vector3Int((int)gridManager.Rows / 2, (int)gridManager.Cols / 2, 0);
+                tile = gridManager.GetClosestFreeTile(gridCenter);
+            } else
+            {
+                tile = gridManager.GetRandomFreeBorderTile();
+            }
 
-            Vector3 cellCenter = grid.GetCellCenterWorld(closestTile);
+            Vector3 cellCenter = grid.GetCellCenterWorld(tile);
+
             Vector2 initialPosition = new Vector2(
                 cellCenter.x,
                 cellCenter.y + yOffset
@@ -111,7 +117,7 @@ public class CharacterMovement : MonoBehaviour
             em.Dispatch(new CharacterMovedEvent
             {
                 character = gameObject,
-                gridPos = closestTile
+                gridPos = tile
             });
 
             enabled = false;

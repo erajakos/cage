@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
         players = new List<Player>();
         AddPlayer(new Player(PlayerType.Human));
         AddPlayer(new Player(PlayerType.Lemming));
+        AddPlayer(new Player(PlayerType.Enemy));
 
         em = EventManager.GetInstance();
         em.AddListener<PlayerTurnEndEvent>(OnPlayerTurnEnd);

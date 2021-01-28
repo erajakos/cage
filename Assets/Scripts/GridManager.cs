@@ -1,10 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Tilemaps;
 using Landmass;
 
 public class GridManager : MonoBehaviour
 {
     public TileManager tileManager;
+    public PositionManager positionManager;
 
     public Tilemap tilemapGround;
     public Tilemap tilemapTrees;
@@ -60,9 +62,6 @@ public class GridManager : MonoBehaviour
                 }
             }
         }
-
-        tilemapGround.transform.position = new Vector2(0, -tilemapGround.size.y / 2 * tileHeight + tileHeight / 2);
-        tilemapTrees.transform.position = new Vector2(0, -tilemapGround.size.y / 2 * tileHeight + tileHeight / 2);
     }
 
     private Tile GetTile(string type)
@@ -80,5 +79,74 @@ public class GridManager : MonoBehaviour
         {
             return tileManager.GetTile("ground");
         }
+    }
+
+    public Vector3Int GetClosestFreeTile(Vector3Int pos)
+    {
+        if (tilemapGround.HasTile(pos) && !positionManager.hasCharacter(pos))
+        {
+            return pos;
+        }
+
+        int distance = 0;
+        while (distance < Mathf.Max(Rows, Cols))
+        {
+            for (int x = -distance - 1; x <= distance + 1; x++)
+            {
+                for (int y = -distance - 1; y <= distance + 1; y++)
+                {
+                    Vector3Int gridPos = new Vector3Int(pos.x + x, pos.y + y, 0);
+                    if (tilemapGround.HasTile(gridPos) && !positionManager.hasCharacter(gridPos))
+                    {
+                        return gridPos;
+                    }
+                }
+            }
+            distance++;
+        }
+
+        Debug.Log("Couldn't find suitable tile");
+        return pos;
+    }
+
+    public Vector3Int GetRandomFreeBorderTile()
+    {
+        // this algorith could be improved...
+
+        int x;
+        int y;
+
+        System.Random rnd = new System.Random();
+        int number1 = rnd.Next(0, 2);
+        int number2 = rnd.Next(0, 2);
+        int number3 = rnd.Next(0, 20);
+
+        if (number1 == 0)
+        {
+            if (number2 == 0)
+            {
+                y = 0;
+                x = number3;
+            } else
+            {
+                y = 19;
+                x = number3;
+            }
+        } else
+        {
+            if (number2 == 0)
+            {
+                x = 0;
+                y = number3;
+            }
+            else
+            {
+                x = 19;
+                y = number3;
+            }
+        }
+
+        Vector3Int pos = new Vector3Int(x, y, 0);
+        return GetClosestFreeTile(pos);
     }
 }
