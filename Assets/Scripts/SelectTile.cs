@@ -7,7 +7,7 @@ public class SelectTile : MonoBehaviour
     public Grid grid;
 
     private Camera cam;
-    private float tileOffsetY = 0.02f;
+    private float tileOffsetY = -0.12f;
 
     private void Start()
     {
