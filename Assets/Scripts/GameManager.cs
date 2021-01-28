@@ -12,8 +12,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         players = new List<Player>();
-        AddPlayer(new Player("Jussi"));
-        AddPlayer(new Player("Erkki"));
+        AddPlayer(new Player(PlayerType.Human));
+        AddPlayer(new Player(PlayerType.Lemming));
 
         em = EventManager.GetInstance();
         em.AddListener<PlayerTurnEndEvent>(OnPlayerTurnEnd);

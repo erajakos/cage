@@ -2,20 +2,28 @@
 using UnityEngine;
 using Events;
 
+public enum PlayerType
+{
+    Human,
+    Enemy,
+    Lemming
+}
+
 public class Player
 {
-    public string name;
+    public int playerType;
     public List<GameObject> characters;
     private EventManager em;
     private int characterTurn = 0;
     private GameObject currentCharacter;
+    
     private bool hasTurn = false;
 
-    public Player(string name)
+    public Player(PlayerType playerType)
     {
         em = EventManager.GetInstance();
 
-        this.name = name;
+        this.playerType = (int)playerType;
         characters = new List<GameObject>();
         AddCharacters();
 
@@ -25,22 +33,32 @@ public class Player
 
     private void AddCharacters()
     {
-        string face = (name == "Erkki") ? "characterA" : "characterB";
-
-        GameObject character1 = AddCharacter(face);
-        GameObject character2 = AddCharacter(face);
-        GameObject character3 = AddCharacter(face);
+        GameObject character1 = AddCharacter();
+        GameObject character2 = AddCharacter();
+        GameObject character3 = AddCharacter();
 
         characters.Add(character1);
         characters.Add(character2);
         characters.Add(character3);
     }
 
-    private GameObject AddCharacter(string sprite)
+    private GameObject AddCharacter()
     {
-        GameObject character = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/Character"));
-        Sprite characterSprite = Resources.Load<Sprite>("Sprites/Characters/" + sprite);
-        character.GetComponent<SpriteRenderer>().sprite = characterSprite;
+        string prefab;
+        switch ((PlayerType)playerType) {
+            case PlayerType.Human:
+                prefab = "ChickenBrown";
+                break;
+            case PlayerType.Lemming:
+                prefab = "SheepWhite";
+                break;
+            case PlayerType.Enemy:
+            default:
+                prefab = "Character";
+                break;
+        }
+
+        GameObject character = (GameObject)GameObject.Instantiate(Resources.Load("Prefabs/" + prefab));
 
         em.Dispatch(new CharacterAddedEvent
         {
@@ -54,7 +72,7 @@ public class Player
     {
         if (ReferenceEquals(e.player, this))
         {
-            Debug.Log(name + " has turn now.");
+            Debug.Log((PlayerType)e.player.playerType + " has turn now.");
             characterTurn = 0;
             hasTurn = true;
 
@@ -84,7 +102,7 @@ public class Player
     {
         if (hasTurn)
         {
-            Debug.Log("Character turn: " + characterTurn + " " + name);
+            Debug.Log("Character turn: " + characterTurn + " " + (PlayerType)playerType);
             GameObject character = characters[characterTurn];
             currentCharacter = character;
             em.Dispatch(new CharacterTurnStartEvent

@@ -9,6 +9,7 @@ public class CharacterMovement : MonoBehaviour
     private Camera cam;
     private bool moving;
     private float speed = 3.0f;
+    private float yOffset = -0.2f;
     private Vector2 targetPosition;
     private ReferenceManager rm;
     private EventManager em;
@@ -55,7 +56,7 @@ public class CharacterMovement : MonoBehaviour
                 Vector3 cellCenter = grid.GetCellCenterWorld(cellCoords);
                 targetPosition = new Vector2(
                     cellCenter.x,
-                    cellCenter.y + transform.lossyScale.y / 4f
+                    cellCenter.y + yOffset
                 );
                 moving = true;
 
@@ -100,7 +101,12 @@ public class CharacterMovement : MonoBehaviour
             Vector3Int gridCenter = new Vector3Int(0, 0, 0);
             Vector3Int closestTile = positionManager.GetClosestFreeTile(gridCenter);
 
-            transform.position = TargetCellToWorld(closestTile);
+            Vector3 cellCenter = grid.GetCellCenterWorld(closestTile);
+            Vector2 initialPosition = new Vector2(
+                cellCenter.x,
+                cellCenter.y + yOffset
+            );
+            transform.position = initialPosition;
 
             em.Dispatch(new CharacterMovedEvent
             {
