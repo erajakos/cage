@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Tilemaps;
 using Events;
 
@@ -37,7 +39,7 @@ public class CharacterMovement : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && !moving)
+        if (Input.GetMouseButtonDown(0) && !moving && gameObject.tag == "Human")
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
@@ -47,22 +49,7 @@ public class CharacterMovement : MonoBehaviour
 
             if (tilemap.HasTile(gridPos) && movementManager.IsValidMove(gridPos))
             {
-                Vector3Int cellCoords = grid.WorldToCell(worldPoint);
-                Debug.Log(cellCoords);
-                targetPosition = TargetCellToWorld(cellCoords);
-                
-                Vector3 cellCenter = grid.GetCellCenterWorld(cellCoords);
-                targetPosition = new Vector2(
-                    cellCenter.x,
-                    cellCenter.y + yOffset
-                );
-                moving = true;
-
-                em.Dispatch(new CharacterMovedEvent
-                {
-                    character = gameObject,
-                    gridPos = gridPos,
-                });
+                MoveToCell(gridPos);
             }
         }
     }
@@ -137,6 +124,14 @@ public class CharacterMovement : MonoBehaviour
                 gridPos = gridPos,
                 position = transform.position
             });
+
+            if (gameObject.tag == "Enemy")
+            {
+                Invoke("MoveEnemy", 1);
+            } else if (gameObject.tag == "Lemming")
+            {
+                Invoke("MoveLemming", 1);
+            }
         }
         else
         {
@@ -144,12 +139,35 @@ public class CharacterMovement : MonoBehaviour
         }
     }
 
-    private Vector2 TargetCellToWorld(Vector3Int cellCoords)
+    private void MoveToCell(Vector3Int cell)
     {
-        Vector3 cellCenter = grid.GetCellCenterWorld(cellCoords);
-        return new Vector2(
+        Vector3 cellCenter = grid.GetCellCenterWorld(cell);
+        targetPosition = new Vector2(
             cellCenter.x,
-            cellCenter.y + transform.lossyScale.y / 4f
+            cellCenter.y + yOffset
         );
+        moving = true;
+
+        em.Dispatch(new CharacterMovedEvent
+        {
+            character = gameObject,
+            gridPos = cell,
+        });
+    }
+
+    private void MoveEnemy()
+    {
+        System.Random random = new System.Random();
+        List<Vector3Int> movementOptions = movementManager.GetMovementOptions();
+        int index = random.Next(movementOptions.Count);
+        MoveToCell(movementOptions[index]);
+    }
+
+    private void MoveLemming()
+    {
+        System.Random random = new System.Random();
+        List<Vector3Int> movementOptions = movementManager.GetMovementOptions();
+        int index = random.Next(movementOptions.Count);
+        MoveToCell(movementOptions[index]);
     }
 }

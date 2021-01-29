@@ -73,5 +73,10 @@ public class MovementManager : MonoBehaviour
             highlightedTiles.Add(highlightTile);
         }
     }
-    
+
+    public List<Vector3Int> GetMovementOptions()
+    {
+        return movementOptions;
+    }
+
 }
