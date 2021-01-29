@@ -111,38 +111,31 @@ public class GridManager : MonoBehaviour
 
     public Vector3Int GetRandomFreeBorderTile()
     {
-        // this algorith could be improved...
-
         int x;
         int y;
 
         System.Random rnd = new System.Random();
-        int number1 = rnd.Next(0, 2);
-        int number2 = rnd.Next(0, 2);
-        int number3 = rnd.Next(0, 20);
-
-        if (number1 == 0)
+        
+        if (rnd.Next(0, 2) == 0)
         {
-            if (number2 == 0)
+            x = rnd.Next(0, Rows);
+            if (rnd.Next(0, 2) == 0)
             {
                 y = 0;
-                x = number3;
             } else
             {
-                y = 19;
-                x = number3;
+                y = Cols - 1;
             }
         } else
         {
-            if (number2 == 0)
+            y = rnd.Next(0, Cols);
+            if (rnd.Next(0, 2) == 0)
             {
                 x = 0;
-                y = number3;
             }
             else
             {
-                x = 19;
-                y = number3;
+                x = Rows - 1;
             }
         }
 
