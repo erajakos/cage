@@ -17,6 +17,8 @@ public class CharacterMovement : MonoBehaviour
     private EventManager em;
     private MovementManager movementManager;
     private GridManager gridManager;
+    private PositionManager positionManager;
+    private EnemyManager enemyManager;
 
     void Awake()
     {
@@ -25,6 +27,8 @@ public class CharacterMovement : MonoBehaviour
         tilemap = rm.groundTileMap;
         movementManager = rm.movementManager;
         gridManager = rm.gridManager;
+        positionManager = rm.positionManager;
+        enemyManager = rm.enemyManager;
 
         cam = Camera.main;
         em = EventManager.GetInstance();
@@ -157,17 +161,36 @@ public class CharacterMovement : MonoBehaviour
 
     private void MoveEnemy()
     {
-        System.Random random = new System.Random();
         List<Vector3Int> movementOptions = movementManager.GetMovementOptions();
-        int index = random.Next(movementOptions.Count);
-        MoveToCell(movementOptions[index]);
+        if (movementOptions.Count == 0)
+        {
+            em.Dispatch(new CharacterTurnEndEvent
+            {
+                character = gameObject
+            });
+        }
+        else
+        {
+            GameObject nearestLemming = positionManager.FindNearestCharacter(transform.position, "Lemming");
+            MoveToCell(enemyManager.CalculateNextMove(movementOptions, nearestLemming.transform.position));
+        }
     }
 
     private void MoveLemming()
     {
         System.Random random = new System.Random();
         List<Vector3Int> movementOptions = movementManager.GetMovementOptions();
-        int index = random.Next(movementOptions.Count);
-        MoveToCell(movementOptions[index]);
+        if (movementOptions.Count == 0)
+        {
+            em.Dispatch(new CharacterTurnEndEvent
+            {
+                character = gameObject
+            });
+        }
+        else
+        {
+            int index = random.Next(movementOptions.Count);
+            MoveToCell(movementOptions[index]);
+        }
     }
 }
