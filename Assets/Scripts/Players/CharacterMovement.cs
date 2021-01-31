@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Events;
@@ -10,8 +9,8 @@ public class CharacterMovement : MonoBehaviour
     private Grid grid;
     private Camera cam;
     private bool moving;
-    private float speed = 3.0f;
-    private float yOffset = -0.2f;
+    private readonly float speed = 3.0f;
+    private readonly float yOffset = -0.2f;
     private Vector2 targetPosition;
     private ReferenceManager rm;
     private EventManager em;

@@ -17,8 +17,6 @@ public class GridManager : MonoBehaviour
     [SerializeField]
     private int cols = 20;
 
-    private const float tileHeight = 0.5795f;
-
     private LandmassGrid landmassGrid;
 
     public int Rows

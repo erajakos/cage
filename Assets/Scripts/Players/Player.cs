@@ -13,7 +13,7 @@ public class Player
 {
     public int playerType;
     public List<GameObject> characters;
-    private EventManager em;
+    private readonly EventManager em;
     private int characterTurn = 0;
     private GameObject currentCharacter;
     
