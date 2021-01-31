@@ -8,7 +8,7 @@ public class ReferenceManager : MonoBehaviour
     public MovementManager movementManager;
     public GridManager gridManager;
     public PositionManager positionManager;
-    public EnemyManager enemyManager;
+    public StrategyManager strategyManager;
 
     private static ReferenceManager instance;
     public static ReferenceManager Instance { get { return instance; } }

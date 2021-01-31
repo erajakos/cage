@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyManager : MonoBehaviour
+public class StrategyManager : MonoBehaviour
 {
     public MovementManager movementManager;
     public PositionManager positionManager;

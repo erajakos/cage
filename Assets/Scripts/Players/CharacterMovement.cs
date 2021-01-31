@@ -18,7 +18,7 @@ public class CharacterMovement : MonoBehaviour
     private MovementManager movementManager;
     private GridManager gridManager;
     private PositionManager positionManager;
-    private EnemyManager enemyManager;
+    private StrategyManager strategyManager;
 
     void Awake()
     {
@@ -28,7 +28,7 @@ public class CharacterMovement : MonoBehaviour
         movementManager = rm.movementManager;
         gridManager = rm.gridManager;
         positionManager = rm.positionManager;
-        enemyManager = rm.enemyManager;
+        strategyManager = rm.strategyManager;
 
         cam = Camera.main;
         em = EventManager.GetInstance();
@@ -172,7 +172,7 @@ public class CharacterMovement : MonoBehaviour
         else
         {
             GameObject nearestLemming = positionManager.FindNearestCharacter(transform.position, "Lemming");
-            MoveToCell(enemyManager.CalculateNextMove(movementOptions, nearestLemming.transform.position));
+            MoveToCell(strategyManager.CalculateNextMove(movementOptions, nearestLemming.transform.position));
         }
     }
 

@@ -36,7 +36,7 @@ public class MovementManager : MonoBehaviour
     private void OnCharacterStartPosEvent(CharacterStartPosEvent e)
     {
         RemoveHighlightedTiles();
-        AddHighlightedTiles(e.gridPos, 2);
+        AddHighlightedTiles(e.gridPos, 1);
     }
 
     private void RemoveHighlightedTiles()
